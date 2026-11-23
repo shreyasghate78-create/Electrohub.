@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#071426">
+<title>ElectroHub | Interactive Electronics Learning</title>
+<style>
+:root{--bg:#f4f7fb;--surface:#fff;--surface2:#edf4fb;--text:#14243a;--muted:#607187;--primary:#087fca;--accent:#14b8a6;--line:#dce6f0;--nav:#071426;--shadow:0 12px 32px rgba(16,42,67,.09)}
+body.dark{--bg:#0b1422;--surface:#111f31;--surface2:#172a40;--text:#e8f1fb;--muted:#a6b7ca;--primary:#38bdf8;--accent:#2dd4bf;--line:#263b52;--nav:#050d18;--shadow:0 12px 32px rgba(0,0,0,.22)}
+*{box-sizing:border-box;margin:0;padding:0;scroll-behavior:smooth}
+body{font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;transition:.25s}
+button,input,select{font:inherit}button{cursor:pointer}
+header{background:linear-gradient(120deg,#071426,#12365a 65%,#087fca);color:white;padding:18px max(5%,calc((100% - 1180px)/2));display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.brand{font-size:1.45rem;font-weight:850;letter-spacing:.3px}.brand span{color:#5eead4}
+.header-actions{display:flex;gap:10px;align-items:center}
+.btn{border:0;border-radius:10px;padding:10px 15px;font-weight:700;background:var(--primary);color:white;transition:.2s}
+.btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.btn.outline{background:transparent;border:1px solid currentColor;color:inherit}
+nav{background:var(--nav);display:flex;justify-content:center;gap:8px;flex-wrap:wrap;padding:10px 15px;position:sticky;top:0;z-index:10}
+nav a{color:#dceafa;text-decoration:none;padding:8px 13px;border-radius:8px;font-size:.94rem}nav a:hover{background:#173a5b;color:white}
+.hero{background:linear-gradient(120deg,#dff4ff,#eafbf7);color:#102c47;padding:54px 20px 42px;text-align:center}
+body.dark .hero{background:linear-gradient(120deg,#122e45,#123c42);color:#e8f8ff}
+.hero .eyebrow{color:#087fca;font-weight:800;text-transform:uppercase;letter-spacing:2px;font-size:.78rem}
+.hero h1{font-size:clamp(2rem,5vw,3.35rem);line-height:1.15;margin:10px auto;max-width:850px}
+.hero p{max-width:720px;margin:12px auto;color:inherit;opacity:.82}
+.search-wrap{max-width:610px;margin:24px auto 0;display:flex;gap:8px}
+.search-wrap input{flex:1;min-width:0;padding:14px 17px;border:1px solid #c5d7e7;border-radius:12px;background:white;color:#14243a;outline:none}
+.container{max-width:1180px;margin:auto;padding:42px 20px}
+.section-head{text-align:center;margin-bottom:25px}.section-head h2{font-size:clamp(1.5rem,3vw,2rem)}.section-head p{color:var(--muted);margin-top:5px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:900px;margin:26px auto 0}
+.stat{background:rgba(255,255,255,.72);border:1px solid #d5e8f3;padding:13px;border-radius:12px}.stat b{display:block;font-size:1.35rem;color:#087fca}.stat small{color:#526b82}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.filters{display:flex;gap:8px;flex-wrap:wrap}.filter{border:1px solid var(--line);background:var(--surface);color:var(--text);padding:8px 13px;border-radius:30px}.filter.active,.filter:hover{background:var(--primary);color:white;border-color:var(--primary)}
+.sort{padding:9px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--text)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:18px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:17px;overflow:hidden;box-shadow:var(--shadow);transition:.22s}
+.card:hover{transform:translateY(-4px)}
+.illustration{height:150px;background:linear-gradient(135deg,var(--surface2),var(--surface));display:grid;place-items:center;padding:15px}
+.illustration svg{width:100%;height:120px;max-width:220px}
+
+.illustration{position:relative}
+.illustration img{width:100%;height:130px;object-fit:contain;display:block;border-radius:8px}
+.illustration .fallback-svg{display:none;width:100%;height:120px;max-width:220px}
+.image-credit{font-size:.72rem;color:var(--muted);margin-top:8px}
+.image-credit a{color:var(--primary);text-decoration:none}
+.image-credit a:hover{text-decoration:underline}
+
+.card-body{padding:17px}.tag{display:inline-block;background:var(--surface2);color:var(--primary);font-size:.72rem;font-weight:800;padding:4px 9px;border-radius:20px;margin-bottom:8px}
+.card h3{margin-bottom:5px}.card p{font-size:.9rem;color:var(--muted);min-height:48px}.card-meta{font-size:.8rem;color:var(--muted);margin:10px 0}
+.card-actions{display:flex;gap:8px;align-items:center}.card-actions .btn{flex:1}.save{border:1px solid var(--line);background:var(--surface2);color:var(--text);border-radius:9px;padding:9px 11px}
+.empty{text-align:center;padding:35px;color:var(--muted);display:none}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:var(--shadow)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.panel h3{margin-bottom:8px}.panel p,.hint{color:var(--muted);font-size:.92rem}
+.field{margin:13px 0}.field label{display:block;font-weight:700;font-size:.9rem;margin-bottom:5px}.field input,.field select{width:100%;padding:11px;border:1px solid var(--line);border-radius:9px;background:var(--bg);color:var(--text)}
+.result{margin-top:13px;padding:13px;background:var(--surface2);border-radius:10px;font-weight:700;color:var(--primary);min-height:48px}
+.band-row{display:flex;gap:5px;align-items:center;margin:16px 0}.band{height:65px;flex:1;border-radius:7px;border:1px solid var(--line)}
+.circuit{background:var(--surface2);border-radius:12px;padding:12px;margin:15px 0}
+.circuit svg{width:100%;height:auto;max-height:170px}
+.bulb{fill:#94a3b8;transition:.2s}.bulb.on{fill:#facc15;filter:drop-shadow(0 0 9px #facc15)}
+.quiz-option{display:block;width:100%;text-align:left;padding:11px 13px;margin:8px 0;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--text)}
+.quiz-option:hover{border-color:var(--primary)}.quiz-option.correct{border-color:#16a34a;background:#dcfce7;color:#14532d}.quiz-option.wrong{border-color:#dc2626;background:#fee2e2;color:#7f1d1d}
+.progress-track{height:12px;background:var(--surface2);border-radius:20px;overflow:hidden;margin:12px 0}.progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--primary),var(--accent));transition:.3s}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}.step{padding:15px;border-radius:12px;background:var(--surface2)}.step b{display:block;color:var(--primary);font-size:1.2rem}
+footer{background:var(--nav);color:#dbeafe;text-align:center;padding:28px 15px;margin-top:25px}footer p{color:#9fb5ca;font-size:.88rem}
+.modal{display:none;position:fixed;inset:0;background:#061426b8;z-index:30;padding:20px;overflow:auto;align-items:center;justify-content:center}.modal.show{display:flex}.modal-box{background:var(--surface);color:var(--text);max-width:650px;width:100%;border-radius:18px;padding:24px;position:relative;max-height:90vh;overflow:auto}.close{position:absolute;right:15px;top:12px;border:0;background:var(--surface2);color:var(--text);border-radius:50%;width:34px;height:34px;font-size:1.2rem}
+@media(max-width:720px){.two-col{grid-template-columns:1fr}.stats{grid-template-columns:repeat(3,1fr)}.container{padding:32px 14px}.steps{grid-template-columns:1fr}.hero{padding:40px 15px}}
+@media(max-width:420px){.stats{grid-template-columns:1fr}.search-wrap{flex-direction:column}.header-actions{width:100%;justify-content:flex-end}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">⚡ Electro<span>Hub</span></div>
+  <div class="header-actions"><span>Learn • Explore • Build</span><button class="btn outline" id="themeBtn" aria-label="Toggle theme">☾ Theme</button></div>
+</header>
+<nav>
+  <a href="#home">Home</a><a href="#components">Components</a><a href="#tools">Calculators</a><a href="#lab">Virtual Lab</a><a href="#quiz">Quiz</a><a href="#progress">Progress</a>
+</nav>
+<section class="hero" id="home">
+  <div class="eyebrow">Your interactive electronics classroom</div>
+  <h1>Understand circuits.<br>Build your ideas.</h1>
+  <p>Explore components through clear illustrations, practical examples, quick calculators and mini challenges. Learn electronics one concept at a time.</p>
+  <div class="search-wrap"><input id="search" type="search" placeholder="Search resistor, Arduino, sensor..." aria-label="Search components"><button class="btn" onclick="document.querySelector('#components').scrollIntoView()">Explore</button></div>
+  <div class="stats">
+    <div class="stat"><b id="componentCount">12+</b><small>Components to explore</small></div>
+    <div class="stat"><b>3</b><small>Learning tools</small></div>
+    <div class="stat"><b id="learnedCount">0</b><small>Topics completed</small></div>
+  </div>
+</section>
+
+<section class="container" id="components">
+  <div class="section-head"><h2>Electronic Components Library</h2><p>Choose a component to understand its function, symbol and applications.</p></div>
+  <div class="toolbar"><div class="filters" id="filters">
+    <button class="filter active" data-filter="all">All</button><button class="filter" data-filter="passive">Passive</button><button class="filter" data-filter="active">Active</button><button class="filter" data-filter="boards">Boards</button><button class="filter" data-filter="sensors">Sensors</button>
+  </div><select class="sort" id="sort"><option value="default">Sort: Default</option><option value="az">Name: A–Z</option></select></div>
+  <div class="grid" id="componentGrid"></div><div class="empty" id="empty">No matching components. Try another search or category.</div>
+</section>
+
+<section class="container" id="tools">
+  <div class="section-head"><h2>Electronics Calculators</h2><p>Try these simple tools to connect theory with practical circuit design.</p></div>
+  <div class="two-col">
+    <div class="panel">
+      <h3>🎨 Resistor Colour-Code Calculator</h3><p>Select the first three bands to calculate a 4-band resistor's resistance. The fourth band is tolerance.</p>
+      <div class="band-row"><div class="band" id="band1" style="background:#8b4513"></div><div class="band" id="band2" style="background:#000"></div><div class="band" id="band3" style="background:#f00"></div><div class="band" style="background:#d4af37"></div></div>
+      <div class="field"><label for="digit1">First band</label><select id="digit1"></select></div>
+      <div class="field"><label for="digit2">Second band</label><select id="digit2"></select></div>
+      <div class="field"><label for="multiplier">Multiplier band</label><select id="multiplier"></select></div>
+      <div class="result" id="resistorResult">Resistance: 1 kΩ ±5%</div>
+    </div>
+    <div class="panel">
+      <h3>💡 LED Series Resistor Calculator</h3><p>Calculate a suitable series resistor using Ohm's law. Use component ratings from the LED and supply datasheets.</p>
+      <div class="field"><label for="supply">Supply voltage (V)</label><input id="supply" type="number" min="0" step=".1" value="5"></div>
+      <div class="field"><label for="forward">LED forward voltage (V)</label><input id="forward" type="number" min="0" step=".1" value="2"></div>
+      <div class="field"><label for="current">Desired LED current (mA)</label><input id="current" type="number" min=".1" step=".1" value="10"></div>
+      <button class="btn" onclick="calculateLED()">Calculate resistor</button><div class="result" id="ledResult">Recommended calculation will appear here.</div>
+    </div>
+  </div>
+</section>
+
+<section class="container" id="lab">
+  <div class="section-head"><h2>Virtual Circuit Lab</h2><p>Explore a simple battery–resistor–LED circuit. Toggle the switch and observe the LED.</p></div>
+  <div class="panel">
+    <div class="two-col">
+      <div><h3>LED circuit demo</h3><p>This conceptual animation shows a closed circuit lighting the LED. A real circuit needs a correctly selected current-limiting resistor and suitable polarity.</p>
+        <div class="circuit"><svg viewBox="0 0 520 170" role="img" aria-label="Simple battery, switch, resistor and LED circuit diagram">
+          <g fill="none" stroke="#64748b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M65 82 H125 M175 82 H235 M295 82 H360 M410 82 H455 V135 H65 V82"/>
+            <path d="M125 82 L165 57" id="switchBlade"/><path d="M175 82 V82"/>
+            <path d="M235 82 l8 -12 l12 24 l12 -24 l12 24 l8 -12"/>
+            <path d="M360 82 L375 67 L390 82 L375 97 Z"/>
+            <path d="M375 97 V120 M366 120 H384"/>
+            <path d="M65 68 V96 M53 74 V90"/>
+          </g>
+          <circle cx="375" cy="82" r="10" class="bulb" id="bulb"/>
+          <g fill="currentColor" font-size="12"><text x="42" y="53">Battery</text><text x="125" y="42">Switch</text><text x="235" y="45">Resistor</text><text x="350" y="45">LED</text></g>
+          <g id="rays" stroke="#facc15" stroke-width="3" stroke-linecap="round" style="display:none"><path d="M397 52 l9 -9 M410 68 l13 -3 M397 110 l9 9"/></g>
+        </svg></div>
+        <button class="btn" id="switchBtn" onclick="toggleCircuit()">Close switch</button><span id="circuitStatus" class="hint" style="margin-left:10px">Circuit is open</span>
+      </div>
+      <div><h3>What is happening?</h3><div class="step"><b>1. Open switch</b><span class="hint">The path is broken, so current does not flow in this demonstration.</span></div><div class="step" style="margin-top:10px"><b>2. Close switch</b><span class="hint">The path is complete, allowing current to flow through the LED and resistor.</span></div><div class="step" style="margin-top:10px"><b>3. Observe</b><span class="hint">The LED indicator lights in the animation when the switch is closed.</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="container" id="quiz">
+  <div class="section-head"><h2>Quick Knowledge Check</h2><p>Answer a few questions and test your electronics fundamentals.</p></div>
+  <div class="panel" style="max-width:760px;margin:auto">
+    <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><b id="questionNumber">Question 1 of 5</b><span class="hint" id="quizScore">Score: 0</span></div>
+    <div class="progress-track"><div class="progress-fill" id="quizProgress" style="width:20%"></div></div>
+    <h3 id="question" style="margin:18px 0">What is the unit of resistance?</h3><div id="options"></div><p id="feedback" aria-live="polite" class="hint"></p><button class="btn" id="nextBtn" onclick="nextQuestion()" disabled>Next question</button>
+  </div>
+</section>
+
+<section class="container" id="progress">
+  <div class="section-head"><h2>Your Learning Progress</h2><p>Mark topics as learned while exploring the component library.</p></div>
+  <div class="panel" style="max-width:760px;margin:auto">
+    <div style="display:flex;justify-content:space-between;gap:10px"><b>Components explored</b><b id="progressText">0 / 12</b></div>
+    <div class="progress-track"><div class="progress-fill" id="learningBar"></div></div>
+    <p class="hint">Your completed topics are saved in this browser on this device.</p>
+    <button class="btn outline" style="color:var(--primary);margin-top:12px" onclick="resetProgress()">Reset progress</button>
+  </div>
+</section>
+
+<footer><h3>⚡ ElectroHub</h3><p>Learn Electronics. Build Ideas. Create the Future.</p><p>Designed as a student-friendly learning resource • © 2026 ElectroHub</p></footer>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" onclick="if(event.target===this)closeModal()">
+ <div class="modal-box"><button class="close" onclick="closeModal()" aria-label="Close">×</button><div id="modalContent"></div></div>
+</div>
+
+<script>
+const components=[
+{name:"Resistor",cat:"passive",type:"Passive component",unit:"Ohm (Ω)",desc:"Limits or controls current in an electrical circuit.",symbol:"zigzag",working:"A resistor produces a voltage drop when current flows through it. Its ideal relationship is V = IR.",uses:"LED current limiting, voltage dividers, pull-up and pull-down networks.",example:"220 Ω, 330 Ω, 1 kΩ, 10 kΩ"},
+{name:"Capacitor",cat:"passive",type:"Passive component",unit:"Farad (F)",desc:"Stores energy in an electric field.",symbol:"capacitor",working:"A capacitor stores charge between two conductive plates separated by an insulating dielectric.",uses:"Filtering, coupling, decoupling, timing and power-supply smoothing.",example:"Ceramic, electrolytic and film capacitors"},
+{name:"Inductor",cat:"passive",type:"Passive component",unit:"Henry (H)",desc:"Stores energy in a magnetic field and opposes changes in current.",symbol:"coil",working:"Current through a coil creates a magnetic field. A changing current induces a voltage across it.",uses:"Filters, chokes, transformers and DC-DC converters.",example:"10 µH, 100 µH, 1 mH"},
+{name:"Diode",cat:"active",unit:"Semiconductor device",desc:"Allows current to flow mainly in one direction.",symbol:"diode",working:"A diode conducts when forward biased and blocks current when reverse biased, within its ratings.",uses:"Rectifiers, polarity protection, clipping and signal circuits.",example:"1N4007, 1N4148"},
+{name:"Transistor",cat:"active",unit:"Semiconductor device",desc:"Controls current and can work as an electronic switch or amplifier.",symbol:"transistor",working:"A small input signal controls a larger current. Common families include BJT and MOSFET.",uses:"Amplifiers, switching, motor drivers and digital circuits.",example:"BC547, 2N2222, 2N7000"},
+{name:"Integrated Circuit (IC)",cat:"active",unit:"Semiconductor chip",desc:"Combines many electronic components in a single package.",symbol:"ic",working:"Tiny semiconductor devices and interconnections are fabricated together to perform a defined function.",uses:"Timers, op-amps, processors, memory and communication systems.",example:"NE555 timer, LM358 op-amp"},
+{name:"Arduino UNO",cat:"boards",unit:"Microcontroller board",desc:"A beginner-friendly board for controlling electronics using code.",symbol:"board",working:"The microcontroller reads inputs, runs a program and controls outputs through its pins.",uses:"Robotics, automation, sensor projects and prototyping.",example:"Classic UNO R3 uses ATmega328P"},
+{name:"Raspberry Pi",cat:"boards",unit:"Single-board computer",desc:"A compact computer that can run an operating system.",symbol:"pi",working:"It runs programs and can interface with external electronics through GPIO pins.",uses:"IoT gateways, computer vision, robotics and education.",example:"Raspberry Pi family"},
+{name:"ESP32",cat:"boards",unit:"Microcontroller board",desc:"A microcontroller family with wireless connectivity on many variants.",symbol:"esp",working:"It combines processing with Wi-Fi and Bluetooth capabilities on supported models.",uses:"IoT devices, wireless monitoring and smart-home projects.",example:"ESP32 development boards"},
+{name:"Temperature Sensor",cat:"sensors",unit:"Sensor",desc:"Measures temperature and converts it into an electrical signal.",symbol:"temp",working:"A sensing element changes an electrical property with temperature; circuitry converts this into a readable signal.",uses:"Weather stations, industrial monitoring and temperature control.",example:"LM35, thermistor, DS18B20"},
+{name:"Ultrasonic Sensor",cat:"sensors",unit:"Distance sensor",desc:"Measures distance using reflected ultrasonic sound waves.",symbol:"ultra",working:"It measures the time between sending a sound pulse and receiving its echo.",uses:"Obstacle detection, robotics and parking-assistance prototypes.",example:"HC-SR04"},
+{name:"LDR",cat:"sensors",unit:"Light sensor",desc:"Its resistance changes with the amount of light falling on it.",symbol:"ldr",working:"An LDR generally has lower resistance in brighter light and higher resistance in darkness.",uses:"Automatic lighting, light meters and brightness detection.",example:"Cadmium-sulfide photoresistor"}
+];
+
+const imageSources={
+"Resistor":{img:"https://commons.wikimedia.org/wiki/Special:FilePath/Electronic_component_resistors.jpg?width=600",page:"https://commons.wikimedia.org/wiki/File:Electronic_component_resistors.jpg"},
+"Capacitor":{img:"https://commons.wikimedia.org/wiki/Special:FilePath/Capacitor_(16092216434).jpg?width=600",page:"https://commons.wikimedia.org/wiki/File:Capacitor_(16092216434).jpg"},
+"Inductor":{img:"https://commons.wikimedia.org/wiki/Special:FilePath/Electronic_component_inductors.jpg?width=600",page:"https://commons.wikimedia.org/wiki/File:Electronic_component_inductors.jpg"},
+"Diode":{img:"https://commons.wikimedia.org/wiki/Special:FilePath/Diode_1N4007.jpg?width=600",page:"https://commons.wikimedia.org/wiki/File:Diode_1N4007.jpg"},
+"Transistor":{img:"https://commons.wikimedia.org/wiki/Special:FilePath/BC547_Transistor_-_01.jpg?width=600",page:"https://commons.wikimedia.org/wiki/File:BC547_Transistor_-_01.jpg"},
+"Integrated Circuit (IC)":{img:"https://commons.wikimedia.org/wiki/Special:FilePath/NE555_DIP_%26_SOIC.jpg?width=600",page:"https://commons.wikimedia.org/wiki/Category:555_timer_IC"},
+"Arduino UNO":{img:"https://commons.wikimedia.org/wiki/Special:FilePath/Arduino_Uno_board.jpg?width=600",page:"https://commons.wikimedia.org/wiki/File:Arduino_Uno_board.jpg"},
+"Raspberry Pi":{img:"https://commons.wikimedia.org/wiki/Special:FilePath/Raspberry-pi.jpg?width=600",page:"https://commons.wikimedia.org/wiki/File:Raspberry-pi.jpg"},
+"ESP32":{img:"https://commons.wikimedia.org/wiki/Special:FilePath/ESP32_Dev_Board.jpg?width=600",page:"https://commons.wikimedia.org/wiki/File:ESP32_Dev_Board.jpg"},
+"Temperature Sensor":{img:"https://commons.wikimedia.org/wiki/Special:FilePath/LM35_temperature_sensor_semiconductor_thermometer_1480374_5_6_HDR_enhancer.jpg?width=600",page:"https://commons.wikimedia.org/wiki/File:LM35_temperature_sensor_semiconductor_thermometer_1480374_5_6_HDR_enhancer.jpg"},
+"Ultrasonic Sensor":{img:"https://commons.wikimedia.org/wiki/Special:FilePath/HC_SR04_Ultrasonic_Module.jpg?width=600",page:"https://commons.wikimedia.org/wiki/File:HC_SR04_Ultrasonic_Module.jpg"},
+"LDR":{img:"https://commons.wikimedia.org/wiki/Special:FilePath/25mm_light-dependent_resistor_(LDR)_(1).jpg?width=600",page:"https://commons.wikimedia.org/wiki/Category:Eligible_mobile_images_for_WSC_2025_India"}
+};
+
+const drawings={
+zigzag:`<path d="M15 60 H48 l12 -18 18 36 18 -36 18 36 18 -36 18 36 12 -18 H205" stroke="#0b83c6" stroke-width="6" fill="none" stroke-linejoin="round"/><text x="110" y="105" text-anchor="middle" fill="currentColor" font-size="13">R — Resistor</text>`,
+capacitor:`<path d="M15 60 H91 M91 25 V95 M109 25 V95 M109 60 H205" stroke="#0b83c6" stroke-width="6" fill="none"/><text x="100" y="115" text-anchor="middle" fill="currentColor" font-size="13">C — Capacitor</text>`,
+coil:`<path d="M15 60 H48 Q48 25 70 25 Q92 25 92 60 Q92 25 114 25 Q136 25 136 60 Q136 25 158 25 Q180 25 180 60 H205" stroke="#0b83c6" stroke-width="5" fill="none"/><text x="110" y="105" text-anchor="middle" fill="currentColor" font-size="13">L — Inductor</text>`,
+diode:`<path d="M15 60 H75 M75 30 L125 60 L75 90 Z M130 28 V92 M130 60 H205" fill="none" stroke="#0b83c6" stroke-width="5" stroke-linejoin="round"/><text x="110" y="115" text-anchor="middle" fill="currentColor" font-size="13">Diode symbol</text>`,
+transistor:`<circle cx="105" cy="60" r="38" fill="none" stroke="#0b83c6" stroke-width="4"/><path d="M105 22 V48 M105 48 L75 80 M105 48 L140 80 M65 65 H105 M140 80 l-15 -2 7 -12" fill="none" stroke="#0b83c6" stroke-width="5"/><text x="110" y="120" text-anchor="middle" fill="currentColor" font-size="13">Transistor concept</text>`,
+ic:`<rect x="55" y="22" width="110" height="76" rx="8" fill="#153a5b" stroke="#0b83c6" stroke-width="3"/><g stroke="#0b83c6" stroke-width="4"><path d="M65 10 V22 M85 10 V22 M105 10 V22 M125 10 V22 M145 10 V22 M65 98 V110 M85 98 V110 M105 98 V110 M125 98 V110 M145 98 V110"/></g><text x="110" y="67" text-anchor="middle" fill="white" font-size="19" font-weight="bold">IC</text>`,
+board:`<rect x="42" y="15" width="136" height="92" rx="9" fill="#18865c" stroke="#0b6846" stroke-width="3"/><rect x="83" y="37" width="53" height="43" rx="4" fill="#172b3e"/><g fill="#e5bd53"><circle cx="58" cy="30" r="4"/><circle cx="162" cy="30" r="4"/><circle cx="58" cy="91" r="4"/><circle cx="162" cy="91" r="4"/></g><text x="110" y="64" text-anchor="middle" fill="white" font-size="10">MCU</text><text x="110" y="126" text-anchor="middle" fill="currentColor" font-size="12">Development board</text>`,
+pi:`<rect x="42" y="15" width="136" height="92" rx="9" fill="#27845d" stroke="#0b6846" stroke-width="3"/><rect x="80" y="37" width="48" height="42" fill="#172b3e"/><rect x="137" y="35" width="25" height="18" fill="#cbd5e1"/><g fill="#d6b45c"><circle cx="58" cy="30" r="4"/><circle cx="58" cy="91" r="4"/></g><text x="110" y="126" text-anchor="middle" fill="currentColor" font-size="12">Single-board computer</text>`,
+esp:`<rect x="55" y="18" width="110" height="90" rx="8" fill="#176d53" stroke="#0b83c6" stroke-width="3"/><rect x="85" y="40" width="50" height="42" fill="#172b3e"/><path d="M92 18 Q110 -3 128 18" fill="none" stroke="#d6b45c" stroke-width="4"/><text x="110" y="66" text-anchor="middle" fill="white" font-size="10">ESP32</text>`,
+temp:`<rect x="91" y="18" width="38" height="72" rx="18" fill="#e5edf5" stroke="#0b83c6" stroke-width="4"/><circle cx="110" cy="88" r="20" fill="#ef6b56"/><rect x="104" y="39" width="12" height="48" rx="6" fill="#ef6b56"/><text x="110" y="128" text-anchor="middle" fill="currentColor" font-size="12">Temperature</text>`,
+ultra:`<rect x="37" y="28" width="146" height="66" rx="9" fill="#1686a8"/><circle cx="78" cy="60" r="22" fill="#cbd5e1" stroke="#475569" stroke-width="4"/><circle cx="142" cy="60" r="22" fill="#cbd5e1" stroke="#475569" stroke-width="4"/><path d="M78 18 Q110 -4 142 18 M78 105 Q110 130 142 105" fill="none" stroke="#0b83c6" stroke-width="3" stroke-dasharray="5 5"/><text x="110" y="126" text-anchor="middle" fill="currentColor" font-size="12">Ultrasonic module</text>`,
+ldr:`<circle cx="110" cy="62" r="30" fill="#d6b45c" stroke="#0b83c6" stroke-width="4"/><path d="M91 62 H129 M91 72 H129 M42 24 L72 45 M42 43 L68 54" stroke="#0b83c6" stroke-width="4" fill="none"/><path d="M35 20 l14 1 -5 12" fill="none" stroke="#0b83c6" stroke-width="3"/><text x="110" y="120" text-anchor="middle" fill="currentColor" font-size="12">Light dependent resistor</text>`
+};
+let activeFilter="all";
+let learned=JSON.parse(localStorage.getItem("electrohubLearned")||"[]");
+function renderCards(){
+ let q=document.getElementById("search").value.toLowerCase();
+ let list=components.filter(c=>(activeFilter==="all"||c.cat===activeFilter)&&(c.name+" "+c.desc+" "+c.uses+" "+c.unit).toLowerCase().includes(q));
+ if(document.getElementById("sort").value==="az")list.sort((a,b)=>a.name.localeCompare(b.name));
+ document.getElementById("componentGrid").innerHTML=list.map(c=>`<article class="card"><div class="illustration"><img src="${imageSources[c.name].img}" alt="${c.name} component photograph" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><svg class="fallback-svg" viewBox="0 0 220 140" role="img" aria-label="${c.name} schematic illustration">${drawings[c.symbol]}</svg></div><div class="card-body"><span class="tag">${c.unit}</span><h3>${c.name}</h3><p>${c.desc}</p><div class="card-meta">Example: ${c.example}</div><div class="image-credit">Photo: <a href="${imageSources[c.name].page}" target="_blank" rel="noopener">Wikimedia Commons</a></div><div class="card-actions"><button class="btn" onclick="openComponent('${c.name}')">Explore topic</button><button class="save" onclick="markLearned('${c.name}')" title="Mark learned">${learned.includes(c.name)?"✓":"＋"}</button></div></div></article>`).join("");
+ document.getElementById("empty").style.display=list.length?"none":"block";
+}
+function openComponent(name){
+ const c=components.find(x=>x.name===name);
+ document.getElementById("modalContent").innerHTML=`<span class="tag">${c.unit}</span><h2 id="modalTitle">${c.name}</h2><div class="illustration" style="border-radius:12px;margin:14px 0"><img src="${imageSources[c.name].img}" alt="${c.name} component photograph" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><svg class="fallback-svg" viewBox="0 0 220 140">${drawings[c.symbol]}</svg></div><p class="image-credit">Image source: <a href="${imageSources[c.name].page}" target="_blank" rel="noopener">Wikimedia Commons file/category page</a>. Check the individual file's licence and attribution requirements before reuse.</p><h3>What does it do?</h3><p>${c.desc}</p><h3 style="margin-top:14px">Working principle</h3><p>${c.working}</p><h3 style="margin-top:14px">Common applications</h3><p>${c.uses}</p><h3 style="margin-top:14px">Examples</h3><p>${c.example}</p><button class="btn" style="margin-top:18px" onclick="markLearned('${c.name}');closeModal()">Mark as learned ✓</button>`;
+ document.getElementById("modal").classList.add("show");
+}
+function closeModal(){document.getElementById("modal").classList.remove("show")}
+function markLearned(name){if(!learned.includes(name)){learned.push(name);localStorage.setItem("electrohubLearned",JSON.stringify(learned));}updateProgress();renderCards()}
+function updateProgress(){let n=learned.length;document.getElementById("learnedCount").textContent=n;document.getElementById("progressText").textContent=`${n} / ${components.length}`;document.getElementById("learningBar").style.width=(n/components.length*100)+"%"}
+function resetProgress(){if(confirm("Reset all completed topics?")){learned=[];localStorage.removeItem("electrohubLearned");updateProgress();renderCards()}}
+document.getElementById("search").addEventListener("input",renderCards);
+document.getElementById("sort").addEventListener("change",renderCards);
+document.querySelectorAll(".filter").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".filter").forEach(x=>x.classList.remove("active"));b.classList.add("active");activeFilter=b.dataset.filter;renderCards()}));
+document.getElementById("themeBtn").addEventListener("click",()=>{document.body.classList.toggle("dark");document.getElementById("themeBtn").textContent=document.body.classList.contains("dark")?"☀ Light":"☾ Theme"});
+const colors=[["Black","#000000",0],["Brown","#8b4513",1],["Red","#e11d48",2],["Orange","#f97316",3],["Yellow","#eab308",4],["Green","#16a34a",5],["Blue","#2563eb",6],["Violet","#7c3aed",7],["Grey","#9ca3af",8],["White","#f8fafc",9]];
+function fillColorSelect(id,withMultiplier=false){let el=document.getElementById(id);el.innerHTML=(withMultiplier?[...colors,["Gold","#d4af37",-1],["Silver","#c0c0c0",-2]]:colors).map(c=>`<option value="${c[2]}" data-color="${c[1]}">${c[0]}</option>`).join("")}
+fillColorSelect("digit1");fillColorSelect("digit2");fillColorSelect("multiplier",true);
+document.getElementById("digit1").value=1;document.getElementById("digit2").value=0;document.getElementById("multiplier").value=2;
+function resistorCalc(){let a=+digit1.value,b=+digit2.value,m=+multiplier.value;let ohms=(10*a+b)*Math.pow(10,m);let fmt=ohms>=1e6?(ohms/1e6)+" MΩ":ohms>=1000?(ohms/1000)+" kΩ":ohms+" Ω";document.getElementById("resistorResult").textContent=`Resistance: ${fmt} ±5% (gold tolerance band)`;[digit1,digit2,multiplier].forEach((el,i)=>document.getElementById("band"+(i+1)).style.background=el.selectedOptions[0].dataset.color)}
+["digit1","digit2","multiplier"].forEach(id=>document.getElementById(id).addEventListener("change",resistorCalc));resistorCalc();
+function calculateLED(){let v=+document.getElementById("supply").value, vf=+document.getElementById("forward").value, ma=+document.getElementById("current").value;let out=document.getElementById("ledResult");if(!Number.isFinite(v+vf+ma)||v<=vf||ma<=0){out.textContent="Check your values: supply voltage must be greater than LED forward voltage and current must be positive.";return}let r=(v-vf)/(ma/1000);out.textContent=`Calculated resistance: ${r.toFixed(1)} Ω. Choose the next suitable standard value at or above this result, and verify resistor power rating.`}
+function toggleCircuit(){let on=document.getElementById("switchBtn").dataset.on!=="true";document.getElementById("switchBtn").dataset.on=on;document.getElementById("switchBtn").textContent=on?"Open switch":"Close switch";document.getElementById("circuitStatus").textContent=on?"Circuit is closed — LED on":"Circuit is open";document.getElementById("bulb").classList.toggle("on",on);document.getElementById("rays").style.display=on?"block":"none";document.getElementById("switchBlade").setAttribute("d",on?"M125 82 H175":"M125 82 L165 57")}
+const questions=[
+{q:"What is the SI unit of electrical resistance?",o:["Farad","Ohm","Henry","Watt"],a:1,e:"Resistance is measured in ohms (Ω)."},
+{q:"Which component stores energy in an electric field?",o:["Inductor","Diode","Capacitor","Transistor"],a:2,e:"A capacitor stores charge and energy in an electric field."},
+{q:"Which device is commonly used as an electronic switch?",o:["Transistor","Resistor","LDR","Fuse"],a:0,e:"A transistor can be driven between cutoff and conduction to act as a switch."},
+{q:"What does an LDR respond to?",o:["Sound","Light intensity","Pressure","Magnetic field"],a:1,e:"An LDR's resistance changes with incident light intensity."},
+{q:"Which board commonly provides Wi-Fi and Bluetooth on many variants?",o:["Classic UNO R3","ESP32","Breadboard","Passive buzzer"],a:1,e:"Many ESP32 development boards include Wi-Fi and Bluetooth connectivity."}
+];let qi=0,score=0,answered=false;
+function showQuestion(){let q=questions[qi];answered=false;document.getElementById("questionNumber").textContent=`Question ${qi+1} of ${questions.length}`;document.getElementById("question").textContent=q.q;document.getElementById("quizScore").textContent=`Score: ${score}`;document.getElementById("quizProgress").style.width=((qi+1)/questions.length*100)+"%";document.getElementById("feedback").textContent="";document.getElementById("nextBtn").disabled=true;document.getElementById("nextBtn").textContent=qi===questions.length-1?"See result":"Next question";document.getElementById("options").innerHTML=q.o.map((x,i)=>`<button class="quiz-option" onclick="chooseAnswer(${i})">${String.fromCharCode(65+i)}. ${x}</button>`).join("")}
+function chooseAnswer(i){if(answered)return;answered=true;let q=questions[qi];document.querySelectorAll(".quiz-option").forEach((b,j)=>{b.disabled=true;if(j===q.a)b.classList.add("correct");else if(j===i)b.classList.add("wrong")});if(i===q.a){score++;document.getElementById("feedback").textContent="Correct! "+q.e}else document.getElementById("feedback").textContent="Not quite. "+q.e;document.getElementById("quizScore").textContent=`Score: ${score}`;document.getElementById("nextBtn").disabled=false}
+function nextQuestion(){if(qi<questions.length-1){qi++;showQuestion()}else{document.getElementById("questionNumber").textContent="Quiz completed";document.getElementById("question").textContent=`You scored ${score} out of ${questions.length}!`;document.getElementById("options").innerHTML="";document.getElementById("feedback").textContent="Keep exploring the component library and try again.";document.getElementById("nextBtn").textContent="Try again";document.getElementById("nextBtn").disabled=false;document.getElementById("nextBtn").onclick=restartQuiz}}
+function restartQuiz(){qi=0;score=0;document.getElementById("nextBtn").onclick=nextQuestion;showQuestion()}
+renderCards();updateProgress();showQuestion();
+</script>
+</body>
+</html>
